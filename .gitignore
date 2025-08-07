@@ -1,4 +1,11 @@
-__pycache__/  
+# Ignore __pycache__ folders
+__pycache__/
+
+# Ignore everything in the data folder
 data/*
-!data/*.dvc  # Do not ignore DVC tracking files
-models/ 
+
+# Do not ignore .dvc files in data folder
+!data/*.dvc
+
+# Ignore models folder
+models/
