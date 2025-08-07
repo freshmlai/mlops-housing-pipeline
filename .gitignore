@@ -1,3 +1,4 @@
-__pycache__/ 
-data/ 
+__pycache__/  
+data/*
+!data/*.dvc  # Do not ignore DVC tracking files
 models/ 
