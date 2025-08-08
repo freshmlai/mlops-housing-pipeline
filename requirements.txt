@@ -1,6 +1,10 @@
-scikit-learn
+fastapi
+uvicorn[standard]
 mlflow
+scikit-learn
 pandas
+numpy
+pydantic
+prometheus-client
+python-dotenv
 dvc
-fastapi 
-uvicorn[standard] 
