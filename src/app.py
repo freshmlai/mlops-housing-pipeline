@@ -10,6 +10,7 @@ from pathlib import Path
 MODEL_URI = "runs:/73f83bfae79c4d56a240fa34998366ac/model"  # Replace with your actual model URI
 LOG_FILE = Path(__file__).parent / "prediction_logs.log"
 
+
 # ------------------------
 # Logging setup
 # ------------------------
@@ -19,19 +20,22 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
+
 # ------------------------
 # Load model from MLflow
 # ------------------------
 try:
     model = mlflow.sklearn.load_model(MODEL_URI)
-except Exception as e:
+except Exception:
     logging.exception("Failed to load model from MLflow")
-    raise e
+    raise
+
 
 # ------------------------
 # FastAPI app
 # ------------------------
 app = FastAPI(title="California Housing Model API")
+
 
 # ------------------------
 # Input schema
@@ -46,6 +50,7 @@ class HousingInput(BaseModel):
     Latitude: float
     Longitude: float
 
+
 # ------------------------
 # Prediction endpoint
 # ------------------------
@@ -53,17 +58,19 @@ class HousingInput(BaseModel):
 def predict(input_data: HousingInput):
     try:
         # Prepare input for model (as 2D array)
-        features = [[
-            input_data.MedInc,
-            input_data.HouseAge,
-            input_data.AveRooms,
-            input_data.AveBedrms,
-            input_data.Population,
-            input_data.AveOccup,
-            input_data.Latitude,
-            input_data.Longitude,
-        ]]
-        
+        features = [
+            [
+                input_data.MedInc,
+                input_data.HouseAge,
+                input_data.AveRooms,
+                input_data.AveBedrms,
+                input_data.Population,
+                input_data.AveOccup,
+                input_data.Latitude,
+                input_data.Longitude,
+            ]
+        ]
+
         prediction = model.predict(features)[0]
 
         # Log the input and prediction
@@ -71,7 +78,6 @@ def predict(input_data: HousingInput):
 
         return {"prediction": prediction}
 
-    except Exception as e:
+    except Exception:
         logging.exception("Prediction failed")
         raise HTTPException(status_code=500, detail="Prediction failed")
-
