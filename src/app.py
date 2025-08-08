@@ -17,9 +17,10 @@ LOG_FILE = Path(__file__).parent / "prediction_logs.log"
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
+    format=(
+        "%(asctime)s - %(levelname)s - %(message)s"
+    ),
 )
-
 
 # ------------------------
 # Load model from MLflow
@@ -74,7 +75,11 @@ def predict(input_data: HousingInput):
         prediction = model.predict(features)[0]
 
         # Log the input and prediction
-        logging.info(f"Input: {input_data.dict()} | Prediction: {prediction:.4f}")
+        logging.info(
+            f"Input: {input_data.dict()} | "
+            f"Prediction: {prediction:.4f}"
+        )
+
 
         return {"prediction": prediction}
 
