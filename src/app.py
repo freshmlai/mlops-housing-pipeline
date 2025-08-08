@@ -21,7 +21,9 @@ DB_FILE = Path(__file__).parent / "prediction_logs.db"
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
+    format=(
+        "%(asctime)s - %(levelname)s - %(message)s"
+    ),
 )
 
 
@@ -110,7 +112,10 @@ def predict(input_data: HousingInput):
         prediction = model.predict(features)[0]
 
         # Log to file
-        logging.info(f"Input: {input_data.dict()} | Prediction: {prediction:.4f}")
+        logging.info(
+            f"Input: {input_data.dict()} | "
+            f"Prediction: {prediction:.4f}"
+        )
 
         # Log to SQLite DB
         log_to_db(input_data.dict(), prediction)
