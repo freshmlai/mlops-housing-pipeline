@@ -38,6 +38,7 @@ except Exception:
 # ------------------------
 app = FastAPI(title="California Housing Model API")
 
+
 # ------------------------
 # Input schema
 # ------------------------
@@ -50,6 +51,7 @@ class HousingInput(BaseModel):
     AveOccup: float
     Latitude: float
     Longitude: float
+
 
 # ------------------------
 # Prediction endpoint
