@@ -7,7 +7,8 @@ from pathlib import Path
 # ------------------------
 # Config
 # ------------------------
-MODEL_URI = "runs:/73f83bfae79c4d56a240fa34998366ac/model"  # Replace with your actual model URI
+# Replace with your actual model URI
+MODEL_URI = "runs:/73f83bfae79c4d56a240fa34998366ac/model"
 LOG_FILE = Path(__file__).parent / "prediction_logs.log"
 
 
@@ -37,7 +38,6 @@ except Exception:
 # ------------------------
 app = FastAPI(title="California Housing Model API")
 
-
 # ------------------------
 # Input schema
 # ------------------------
@@ -50,7 +50,6 @@ class HousingInput(BaseModel):
     AveOccup: float
     Latitude: float
     Longitude: float
-
 
 # ------------------------
 # Prediction endpoint
@@ -79,7 +78,6 @@ def predict(input_data: HousingInput):
             f"Input: {input_data.dict()} | "
             f"Prediction: {prediction:.4f}"
         )
-
 
         return {"prediction": prediction}
 
