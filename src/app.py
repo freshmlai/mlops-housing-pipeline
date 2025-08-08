@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 
 # ------------------------
-# Config
+# Configg
 # ------------------------
 MODEL_URI = "runs:/73f83bfae79c4d56a240fa34998366ac/model"
 LOG_FILE = Path(__file__).parent / "prediction_logs.log"
