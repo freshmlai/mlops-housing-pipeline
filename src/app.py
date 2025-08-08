@@ -48,4 +48,3 @@ class HousingInput(BaseModel):
     AveOccup: float
     Latitude: float
     Longitude: float
-
