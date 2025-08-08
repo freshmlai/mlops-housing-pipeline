@@ -8,6 +8,3 @@ pydantic
 prometheus-client
 python-dotenv
 dvc
-sqlite3
-pathlib
-logging
