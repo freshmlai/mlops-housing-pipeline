@@ -25,7 +25,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
-
 # ------------------------
 # Load model from MLflow
 # ------------------------
@@ -56,4 +55,8 @@ class HousingInput(BaseModel):
     MedInc: float
     HouseAge: float
     AveRooms: float
-    AveBedrms:
+    AveBedrms: float
+    Population: float
+    AveOccup: float
+    Latitude: float
+    Longitude: float
