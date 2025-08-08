@@ -10,7 +10,9 @@ from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 # ------------------------
 # Config
 # ------------------------
-MODEL_URI = "runs:/73f83bfae79c4d56a240fa34998366ac/model"  # Replace with your actual model URI
+MODEL_URI = (
+    "runs:/73f83bfae79c4d56a240fa34998366ac/model"
+)  # Replace with your actual model URI
 LOG_FILE = Path(__file__).parent / "prediction_logs.log"
 DB_FILE = Path(__file__).parent / "prediction_logs.db"
 
@@ -55,7 +57,10 @@ def log_to_db(input_data: dict, prediction: float):
 # ------------------------
 # Prometheus metrics setup
 # ------------------------
-REQUEST_COUNT = Counter("prediction_requests_total", "Total number of prediction requests")
+REQUEST_COUNT = Counter(
+    "prediction_requests_total",
+    "Total number of prediction requests",
+)
 
 
 # ------------------------
