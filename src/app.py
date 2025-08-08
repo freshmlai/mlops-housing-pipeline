@@ -7,8 +7,8 @@ import sqlite3
 import json
 from datetime import datetime
 from pathlib import Path
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
-from fastapi.responses import Response, PlainTextResponse
+from prometheus_client import Counter, generate_latest
+from fastapi.responses import PlainTextResponse
 
 # ------------------------
 # Config
@@ -46,6 +46,7 @@ app = FastAPI(title="California Housing Model API")
 REQUEST_COUNT = Counter("prediction_requests_total", "Total prediction requests")
 ERROR_COUNT = Counter("prediction_errors_total", "Total prediction errors")
 
+
 # ------------------------
 # Input schema
 # ------------------------
@@ -58,6 +59,7 @@ class HousingInput(BaseModel):
     AveOccup: float
     Latitude: float
     Longitude: float
+
 
 # ------------------------
 # Helper: Save to SQLite
@@ -81,12 +83,14 @@ def save_request_to_db(features: dict, prediction: float):
     conn.commit()
     conn.close()
 
+
 # ------------------------
 # Routes
 # ------------------------
 @app.get("/")
 def read_root():
     return {"message": "California Housing Model API is up"}
+
 
 @app.post("/predict")
 def predict(input_data: HousingInput):
@@ -108,15 +112,17 @@ def predict(input_data: HousingInput):
         logging.exception("Prediction failed")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 # Prometheus format (for monitoring tools)
 @app.get("/metrics", response_class=PlainTextResponse)
 def metrics():
     return generate_latest()
+
 
 # JSON format (for humans / Swagger)
 @app.get("/metrics-json")
 def metrics_json():
     return {
         "prediction_requests_total": REQUEST_COUNT._value.get(),
-        "prediction_errors_total": ERROR_COUNT._value.get()
+        "prediction_errors_total": ERROR_COUNT._value.get(),
     }
