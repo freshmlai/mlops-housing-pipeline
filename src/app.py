@@ -30,7 +30,9 @@ logging.basicConfig(
 # Load model from MLflow
 # ------------------------
 try:
-    model = mlflow.sklearn.load_model(MODEL_URI)
+    model = mlflow.sklearn.load_model(
+        MODEL_URI
+    )
 except Exception as e:
     logging.exception("Failed to load model from MLflow")
     raise e
@@ -54,75 +56,4 @@ class HousingInput(BaseModel):
     MedInc: float
     HouseAge: float
     AveRooms: float
-    AveBedrms: float
-    Population: float
-    AveOccup: float
-    Latitude: float
-    Longitude: float
-
-
-# ------------------------
-# Helper: Save to SQLite
-# ------------------------
-def save_request_to_db(features: dict, prediction: float):
-    conn = sqlite3.connect(LOG_DB)
-    conn.execute(
-        """
-        CREATE TABLE IF NOT EXISTS predictions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ts TEXT,
-            features TEXT,
-            prediction REAL
-        )
-        """
-    )
-    conn.execute(
-        "INSERT INTO predictions (ts, features, prediction) VALUES (?, ?, ?)",
-        (datetime.now().isoformat(), json.dumps(features), prediction),
-    )
-    conn.commit()
-    conn.close()
-
-
-# ------------------------
-# Routes
-# ------------------------
-@app.get("/")
-def read_root():
-    return {"message": "California Housing Model API is up"}
-
-
-@app.post("/predict")
-def predict(input_data: HousingInput):
-    REQUEST_COUNT.inc()
-    try:
-        # Convert input to DataFrame
-        data = pd.DataFrame([input_data.dict()])
-        prediction = float(model.predict(data)[0])
-
-        # Log to file
-        logging.info(f"Features={input_data.dict()} => Prediction={prediction}")
-
-        # Save to SQLite
-        save_request_to_db(input_data.dict(), prediction)
-
-        return {"prediction": prediction}
-    except Exception as e:
-        ERROR_COUNT.inc()
-        logging.exception("Prediction failed")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-# Prometheus format (for monitoring tools)
-@app.get("/metrics", response_class=PlainTextResponse)
-def metrics():
-    return generate_latest()
-
-
-# JSON format (for humans / Swagger)
-@app.get("/metrics-json")
-def metrics_json():
-    return {
-        "prediction_requests_total": REQUEST_COUNT._value.get(),
-        "prediction_errors_total": ERROR_COUNT._value.get(),
-    }
+    AveBedrms:
