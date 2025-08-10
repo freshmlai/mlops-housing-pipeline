@@ -164,7 +164,10 @@ async def predict(input_data: HousingInput) -> Dict[str, float]:
         return {"prediction": prediction}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+        # FIX: Broke the following line into multiple lines to fix E501
+        raise HTTPException(
+            status_code=500, detail=f"Prediction failed: {str(e)}"
+        )
 
 
 # ========================
