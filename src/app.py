@@ -44,6 +44,7 @@ REQUEST_COUNT = Counter(
     "Total number of prediction requests",
 )
 
+
 # ------------------------
 # Database helpers
 # ------------------------
@@ -79,6 +80,7 @@ try:
 except Exception:
     logging.exception("Failed to load model from MLflow")
     raise
+
 
 # ------------------------
 # FastAPI app
