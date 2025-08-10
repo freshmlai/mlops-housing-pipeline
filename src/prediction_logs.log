@@ -131,3 +131,190 @@ Traceback (most recent call last):
     with open(FEATURE_NAMES_FILE, "r") as fh:
 FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Public\\Documents\\github\\mlops-housing-pipeline\\src\\feature_names.json'
 2025-08-10 15:32:02,021 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-10 15:59:36,783 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 30.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 5.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 2.8190
+2025-08-10 19:11:49,535 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 36, in __init__
+    uri = RunsArtifactRepository.get_underlying_uri(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 49, in get_underlying_uri
+    uri = get_artifact_uri(
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 53, in get_artifact_uri
+    run = store.get_run(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 741, in get_run
+    run_info = self._get_run_info(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Run '9c84758eb3c74a9788827a9039093866' not found
+2025-08-10 19:13:38,124 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 36, in __init__
+    uri = RunsArtifactRepository.get_underlying_uri(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 49, in get_underlying_uri
+    uri = get_artifact_uri(
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 53, in get_artifact_uri
+    run = store.get_run(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 741, in get_run
+    run_info = self._get_run_info(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Run '96d043900823450092a4ac4a22d77682' not found
+2025-08-10 19:15:32,513 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 36, in __init__
+    uri = RunsArtifactRepository.get_underlying_uri(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 49, in get_underlying_uri
+    uri = get_artifact_uri(
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 53, in get_artifact_uri
+    run = store.get_run(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 741, in get_run
+    run_info = self._get_run_info(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Run '96d043900823450092a4ac4a22d77682' not found
+2025-08-10 19:16:01,603 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 36, in __init__
+    uri = RunsArtifactRepository.get_underlying_uri(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 49, in get_underlying_uri
+    uri = get_artifact_uri(
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 53, in get_artifact_uri
+    run = store.get_run(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 741, in get_run
+    run_info = self._get_run_info(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Run '3e0824fe9a1546dd9f864028af158d37' not found
+2025-08-10 19:16:30,000 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 36, in __init__
+    uri = RunsArtifactRepository.get_underlying_uri(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 49, in get_underlying_uri
+    uri = get_artifact_uri(
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 53, in get_artifact_uri
+    run = store.get_run(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 741, in get_run
+    run_info = self._get_run_info(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Run 'd45d76900d6048fdb952a5852e0190f2' not found
+2025-08-10 19:26:56,010 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\models_artifact_repo.py", line 73, in __init__
+    ) = ModelsArtifactRepository._get_model_uri_infos(artifact_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\models_artifact_repo.py", line 124, in _get_model_uri_infos
+    name_and_version_or_id = get_model_name_and_version(client, uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\utils\models.py", line 148, in get_model_name_and_version
+    return model_name, str(_get_latest_model_version(client, model_name, model_stage))
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\utils\models.py", line 40, in _get_latest_model_version
+    latest = client.get_latest_versions(name, None if stage is None else [stage])
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\_model_registry\client.py", line 186, in get_latest_versions
+    return self.store.get_latest_versions(name, stages)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\model_registry\file_store.py", line 444, in get_latest_versions
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Registered Model with name=california-housing not found
+2025-08-10 19:31:29,171 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\models_artifact_repo.py", line 73, in __init__
+    ) = ModelsArtifactRepository._get_model_uri_infos(artifact_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\models_artifact_repo.py", line 124, in _get_model_uri_infos
+    name_and_version_or_id = get_model_name_and_version(client, uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\utils\models.py", line 148, in get_model_name_and_version
+    return model_name, str(_get_latest_model_version(client, model_name, model_stage))
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\utils\models.py", line 40, in _get_latest_model_version
+    latest = client.get_latest_versions(name, None if stage is None else [stage])
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\_model_registry\client.py", line 186, in get_latest_versions
+    return self.store.get_latest_versions(name, stages)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\model_registry\file_store.py", line 444, in get_latest_versions
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Registered Model with name=california-housing not found
+2025-08-10 19:32:20,014 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 79, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\models_artifact_repo.py", line 73, in __init__
+    ) = ModelsArtifactRepository._get_model_uri_infos(artifact_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\models_artifact_repo.py", line 124, in _get_model_uri_infos
+    name_and_version_or_id = get_model_name_and_version(client, uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\utils\models.py", line 148, in get_model_name_and_version
+    return model_name, str(_get_latest_model_version(client, model_name, model_stage))
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\utils\models.py", line 43, in _get_latest_model_version
+    raise MlflowException(f"No versions of model with name '{name}'{stage_str} found")
+mlflow.exceptions.MlflowException: No versions of model with name 'CaliforniaHousingModel' and stage 'Production' found

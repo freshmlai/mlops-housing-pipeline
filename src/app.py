@@ -12,7 +12,7 @@ from typing import Dict
 # ------------------------
 # Config
 # ------------------------
-MODEL_URI = "runs:/9c84758eb3c74a9788827a9039093866/model"
+MODEL_URI = "models:/CaliforniaHousingModel/Production"
 LOG_FILE = Path(__file__).parent / "prediction_logs.log"
 DB_FILE = Path(__file__).parent / "prediction_logs.db"
 FEATURE_NAMES_FILE = Path(__file__).parent / "feature_names.json"

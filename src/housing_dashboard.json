@@ -1,0 +1,32 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Housing ML Predictions",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Prediction Requests Over Time",
+        "targets": [
+          {
+            "expr": "rate(prediction_requests_total[1m])",
+            "legendFormat": "Requests/sec",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Prediction Latency",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(prediction_latency_seconds_bucket[5m])) by (le))",
+            "legendFormat": "95th Percentile Latency",
+            "refId": "B"
+          }
+        ]
+      }
+    ],
+    "schemaVersion": 27,
+    "version": 0
+  }
+}
