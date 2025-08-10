@@ -1,32 +1,60 @@
 {
   "dashboard": {
     "id": null,
-    "title": "Housing ML Predictions",
+    "title": "Housing Model Dashboard",
+    "tags": ["housing", "mlops", "prometheus"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "10s",
     "panels": [
       {
         "type": "graph",
-        "title": "Prediction Requests Over Time",
+        "title": "Prediction Count",
         "targets": [
           {
-            "expr": "rate(prediction_requests_total[1m])",
-            "legendFormat": "Requests/sec",
+            "expr": "sum(predict_total)",
+            "legendFormat": "Total Predictions",
             "refId": "A"
           }
-        ]
+        ],
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
       },
       {
         "type": "graph",
-        "title": "Prediction Latency",
+        "title": "Average Prediction Value",
         "targets": [
           {
-            "expr": "histogram_quantile(0.95, sum(rate(prediction_latency_seconds_bucket[5m])) by (le))",
-            "legendFormat": "95th Percentile Latency",
+            "expr": "avg(predict_value)",
+            "legendFormat": "Avg Prediction",
             "refId": "B"
           }
-        ]
+        ],
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+      },
+      {
+        "type": "stat",
+        "title": "MSE Score",
+        "targets": [
+          {
+            "expr": "model_mse",
+            "refId": "C"
+          }
+        ],
+        "gridPos": { "x": 0, "y": 8, "w": 6, "h": 4 }
+      },
+      {
+        "type": "stat",
+        "title": "RMSE Score",
+        "targets": [
+          {
+            "expr": "model_rmse",
+            "refId": "D"
+          }
+        ],
+        "gridPos": { "x": 6, "y": 8, "w": 6, "h": 4 }
       }
-    ],
-    "schemaVersion": 27,
-    "version": 0
-  }
+    ]
+  },
+  "overwrite": true
 }

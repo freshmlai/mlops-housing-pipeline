@@ -1,10 +1,13 @@
-fastapi
-uvicorn[standard]
 mlflow
-scikit-learn
 pandas
 numpy
 pydantic
-prometheus-client
 python-dotenv
 dvc
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+pandas==2.0.3
+scikit-learn==1.2.2
+joblib==1.3.1
+prometheus-client==0.17.0
+

@@ -318,3 +318,4 @@ Traceback (most recent call last):
   File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\utils\models.py", line 43, in _get_latest_model_version
     raise MlflowException(f"No versions of model with name '{name}'{stage_str} found")
 mlflow.exceptions.MlflowException: No versions of model with name 'CaliforniaHousingModel' and stage 'Production' found
+2025-08-10 19:39:30,826 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
