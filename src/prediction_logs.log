@@ -23,3 +23,110 @@ Traceback (most recent call last):
   File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
     raise MlflowException(
 mlflow.exceptions.MlflowException: Run '73f83bfae79c4d56a240fa34998366ac' not found
+2025-08-09 03:47:12,187 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-09 03:47:12,189 - ERROR - Prediction failed
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 126, in predict
+    log_to_db(input_data.dict(), prediction)
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 50, in log_to_db
+    cursor.execute(
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 1204 and this is thread id 4812.
+2025-08-10 14:32:29,412 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 70, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 36, in __init__
+    uri = RunsArtifactRepository.get_underlying_uri(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 49, in get_underlying_uri
+    uri = get_artifact_uri(
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 53, in get_artifact_uri
+    run = store.get_run(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 741, in get_run
+    run_info = self._get_run_info(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Run '73f83bfae79c4d56a240fa34998366ac' not found
+2025-08-10 14:34:17,845 - ERROR - Failed to load model from MLflow
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 70, in <module>
+    model = mlflow.sklearn.load_model(MODEL_URI)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\sklearn\__init__.py", line 652, in load_model
+    local_model_path = _download_artifact_from_uri(artifact_uri=model_uri, output_path=dst_path)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 115, in _download_artifact_from_uri
+    repo = get_artifact_repository(artifact_uri=root_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 144, in get_artifact_repository
+    return _artifact_repository_registry.get_artifact_repository(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\artifact_repository_registry.py", line 82, in get_artifact_repository
+    return repository(artifact_uri, tracking_uri=tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 36, in __init__
+    uri = RunsArtifactRepository.get_underlying_uri(artifact_uri, tracking_uri)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\artifact\runs_artifact_repo.py", line 49, in get_underlying_uri
+    uri = get_artifact_uri(
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\tracking\artifact_utils.py", line 53, in get_artifact_uri
+    run = store.get_run(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 741, in get_run
+    run_info = self._get_run_info(run_id)
+  File "C:\Users\HP-PC\AppData\Local\Programs\Python\Python310\lib\site-packages\mlflow\store\tracking\file_store.py", line 767, in _get_run_info
+    raise MlflowException(
+mlflow.exceptions.MlflowException: Run '9c84758eb3c74a9788827a9039093866' not found
+2025-08-10 14:38:01,891 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-10 14:38:01,895 - ERROR - Prediction failed
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 126, in predict
+    log_to_db(input_data.dict(), prediction)
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 50, in log_to_db
+    cursor.execute(
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 5060 and this is thread id 2496.
+2025-08-10 14:51:30,388 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-10 14:51:30,389 - ERROR - Prediction failed
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 126, in predict
+    log_to_db(input_data.dict(), prediction)
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 50, in log_to_db
+    cursor.execute(
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 5636 and this is thread id 2812.
+2025-08-10 14:51:36,608 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-10 14:51:36,608 - ERROR - Prediction failed
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 126, in predict
+    log_to_db(input_data.dict(), prediction)
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 50, in log_to_db
+    cursor.execute(
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 5636 and this is thread id 2812.
+2025-08-10 14:53:57,187 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-10 14:53:57,188 - ERROR - Prediction failed
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 126, in predict
+    log_to_db(input_data.dict(), prediction)
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 50, in log_to_db
+    cursor.execute(
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 5636 and this is thread id 2812.
+2025-08-10 15:00:27,643 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-10 15:00:27,645 - ERROR - Prediction failed
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 125, in predict
+    log_to_db(input_data.dict(), prediction)
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 52, in log_to_db
+    cursor.execute(
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 5992 and this is thread id 3084.
+2025-08-10 15:11:30,401 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
+2025-08-10 15:11:30,402 - ERROR - Prediction failed
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 123, in predict
+    log_to_db(input_data.dict(), prediction)
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 51, in log_to_db
+    cursor.execute(
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 4428 and this is thread id 2372.
+2025-08-10 15:22:52,128 - ERROR - Failed to load feature names from JSON
+Traceback (most recent call last):
+  File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 35, in <module>
+    with open(FEATURE_NAMES_FILE, "r") as fh:
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Public\\Documents\\github\\mlops-housing-pipeline\\src\\feature_names.json'

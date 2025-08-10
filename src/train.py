@@ -5,23 +5,40 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_squared_error
 import mlflow
 import mlflow.sklearn
+import json
+from pathlib import Path
 
+# ------------------------
 # Load dataset
-data = pd.read_csv("data/housing.csv")
+# ------------------------
+data = pd.read_csv("../data/housing.csv")
 
+# ------------------------
 # Preprocessing (target is MedHouseVal)
+# ------------------------
 X = data.drop(columns=["MedHouseVal"])
 y = data["MedHouseVal"]
 
-# Split into training and testing sets
+# Save feature names for inference
+feature_names_path = Path(__file__).parent / "feature_names.json"
+with open(feature_names_path, "w") as f:
+    json.dump(list(X.columns), f)
+
+# ------------------------
+# Split into training/testing
+# ------------------------
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# Set up MLflow tracking
+# ------------------------
+# MLflow setup
+# ------------------------
 mlflow.set_experiment("california-housing")
 
+# ------------------------
 # 1. Linear Regression
+# ------------------------
 with mlflow.start_run(run_name="Linear Regression"):
     lr_model = LinearRegression()
     lr_model.fit(X_train, y_train)
@@ -34,7 +51,9 @@ with mlflow.start_run(run_name="Linear Regression"):
 
     print(f"Linear Regression MSE: {mse}")
 
+# ------------------------
 # 2. Decision Tree
+# ------------------------
 with mlflow.start_run(run_name="Decision Tree"):
     dt_model = DecisionTreeRegressor(random_state=42)
     dt_model.fit(X_train, y_train)

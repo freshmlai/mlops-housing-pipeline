@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Public/Documents/github/mlops-housing-pipeline/src/mlruns/645540172740935228/6d2da4f553224b778b1945aa4c2efb5b/artifacts
+end_time: 1754819737303
+entry_point_name: ''
+experiment_id: '645540172740935228'
+lifecycle_stage: active
+run_id: 6d2da4f553224b778b1945aa4c2efb5b
+run_name: Linear Regression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754819711712
+status: 3
+tags: []
+user_id: HP-PC
