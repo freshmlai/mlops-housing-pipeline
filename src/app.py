@@ -12,9 +12,7 @@ from typing import Dict
 # ------------------------
 # Config
 # ------------------------
-MODEL_URI = (
-    "runs:/9c84758eb3c74a9788827a9039093866/model"
-)
+MODEL_URI = "runs:/9c84758eb3c74a9788827a9039093866/model"
 LOG_FILE = Path(__file__).parent / "prediction_logs.log"
 DB_FILE = Path(__file__).parent / "prediction_logs.db"
 FEATURE_NAMES_FILE = Path(__file__).parent / "feature_names.json"
@@ -32,7 +30,7 @@ logging.basicConfig(
 # Load feature names
 # ------------------------
 try:
-    with open(FEATURE_NAMES_FILE, "r") as fh:
+    with open(FEATURE_NAMES_FILE, "r", encoding="utf-8") as fh:
         FEATURE_NAMES = json.load(fh)
 except Exception:
     logging.exception("Failed to load feature names from JSON")
@@ -51,27 +49,25 @@ REQUEST_COUNT = Counter(
 # ------------------------
 def init_db() -> None:
     """Create the prediction_logs table if it does not exist."""
-    sql = (
-        "CREATE TABLE IF NOT EXISTS prediction_logs ("
-        "timestamp TEXT DEFAULT CURRENT_TIMESTAMP, "
-        "input TEXT, prediction REAL)"
+    sql = """
+    CREATE TABLE IF NOT EXISTS prediction_logs (
+        timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+        input TEXT,
+        prediction REAL
     )
-    # Use a short-lived connection to avoid cross-thread issues.
+    """
     with sqlite3.connect(DB_FILE) as conn:
-        cur = conn.cursor()
-        cur.execute(sql)
+        conn.execute(sql)
         conn.commit()
 
 
 def log_to_db(input_data: Dict, prediction: float) -> None:
     """Insert one prediction record into the SQLite DB."""
-    insert_sql = (
-        "INSERT INTO prediction_logs (input, prediction) VALUES (?, ?)"
-    )
-    # New connection per invocation — safe with FastAPI threads/workers.
+    insert_sql = """
+    INSERT INTO prediction_logs (input, prediction) VALUES (?, ?)
+    """
     with sqlite3.connect(DB_FILE) as conn:
-        cur = conn.cursor()
-        cur.execute(insert_sql, (str(input_data), float(prediction)))
+        conn.execute(insert_sql, (str(input_data), float(prediction)))
         conn.commit()
 
 
@@ -89,9 +85,10 @@ except Exception:
 # ------------------------
 app = FastAPI(title="California Housing Model API")
 
-# Ensure DB exists when the app starts
+
 @app.on_event("startup")
-def on_startup():
+def on_startup() -> None:
+    """Ensure database exists when the app starts."""
     init_db()
 
 
@@ -113,11 +110,11 @@ class HousingInput(BaseModel):
 # Prediction endpoint
 # ------------------------
 @app.post("/predict")
-def predict(input_data: HousingInput):
+def predict(input_data: HousingInput) -> Dict[str, float]:
+    """Make a prediction based on California housing features."""
     try:
         REQUEST_COUNT.inc()
 
-        # Build DataFrame with the exact columns used in training
         input_df = pd.DataFrame(
             [[
                 input_data.MedInc,
@@ -134,10 +131,8 @@ def predict(input_data: HousingInput):
 
         pred_value = float(model.predict(input_df)[0])
 
-        # Log to file and DB
         logging.info(
-            f"Input: {input_data.dict()} | "
-            f"Prediction: {pred_value:.4f}"
+            "Input: %s | Prediction: %.4f", input_data.dict(), pred_value
         )
         log_to_db(input_data.dict(), pred_value)
 
@@ -147,7 +142,7 @@ def predict(input_data: HousingInput):
         logging.exception("Prediction failed")
         raise HTTPException(
             status_code=500,
-            detail=f"Prediction failed: {str(exc)}"
+            detail=f"Prediction failed: {str(exc)}",
         )
 
 
@@ -155,6 +150,7 @@ def predict(input_data: HousingInput):
 # Metrics endpoint for Prometheus
 # ------------------------
 @app.get("/metrics")
-def metrics():
+def metrics() -> Response:
+    """Expose Prometheus metrics."""
     data = generate_latest()
     return Response(content=data, media_type=CONTENT_TYPE_LATEST)

@@ -130,3 +130,4 @@ Traceback (most recent call last):
   File "C:\Users\Public\Documents\github\mlops-housing-pipeline\src\app.py", line 35, in <module>
     with open(FEATURE_NAMES_FILE, "r") as fh:
 FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Public\\Documents\\github\\mlops-housing-pipeline\\src\\feature_names.json'
+2025-08-10 15:32:02,021 - INFO - Input: {'MedInc': 8.3252, 'HouseAge': 41.0, 'AveRooms': 6.9841, 'AveBedrms': 1.0238, 'Population': 322.0, 'AveOccup': 2.5556, 'Latitude': 37.88, 'Longitude': -122.23} | Prediction: 3.8220
