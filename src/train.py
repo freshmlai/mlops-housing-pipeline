@@ -62,8 +62,6 @@ def main():
             # Log parameters, metrics, and artifacts
             mlflow.log_param("model_name", model_name)
             mlflow.log_param("mse", f"{mse:.6f}")
-            
-            # Log feature list directly as a dictionary artifact
             mlflow.log_dict({"features": feature_names}, "features.json")
 
             # Infer signature and log the model
@@ -83,20 +81,31 @@ def main():
                 best_run_id = run_id
                 print(f"⭐ New best model found: {model_name}")
 
-    print(f"\n🏆 Best model is from Run ID: {best_run_id} with MSE: {best_mse:.4f}")
+    # FIX: Re-formatted long f-string
+    best_model_message = (
+        f"\n🏆 Best model is from Run ID: {best_run_id} "
+        f"with MSE: {best_mse:.4f}"
+    )
+    print(best_model_message)
 
     # --- 3. Register and Promote the Best Model ---
     if not best_run_id:
         raise RuntimeError("Training failed, no best model was found.")
 
-    print(f"\nRegistering best model under the name: '{REGISTERED_MODEL_NAME}'...")
+    # FIX: Re-formatted long f-string
+    registration_message = (
+        f"\nRegistering best model under the name: "
+        f"'{REGISTERED_MODEL_NAME}'..."
+    )
+    print(registration_message)
     model_uri = f"runs:/{best_run_id}/model"
     try:
         registered_model_version = mlflow.register_model(
             model_uri=model_uri, name=REGISTERED_MODEL_NAME
         )
         print(
-            f"✅ Model registered successfully. Version: {registered_model_version.version}"
+            f"✅ Model registered successfully. "
+            f"Version: {registered_model_version.version}"
         )
     except Exception as e:
         print(f"🚨 Model registration failed: {e}")
@@ -106,7 +115,8 @@ def main():
     print("Waiting for model version to become 'READY'...")
     for _ in range(10):  # Wait up to 10 seconds
         model_version_details = client.get_model_version(
-            name=REGISTERED_MODEL_NAME, version=registered_model_version.version
+            name=REGISTERED_MODEL_NAME,
+            version=registered_model_version.version
         )
         if model_version_details.status == "READY":
             print("✅ Model is READY.")
@@ -114,16 +124,25 @@ def main():
         time.sleep(1)
 
     if model_version_details.status != "READY":
-        print("🚨 Model version did not become ready in time. Aborting promotion.")
+        error_message = (
+            "🚨 Model version did not become ready in time. "
+            "Aborting promotion."
+        )
+        print(error_message)
         return
 
-    print(f"Promoting model version {registered_model_version.version} to 'Production' stage...")
+    promotion_message = (
+        f"Promoting model version {registered_model_version.version} "
+        "to 'Production' stage..."
+    )
+    print(promotion_message)
     try:
+        # Optional: move old Production models to Archive
         client.transition_model_version_stage(
             name=REGISTERED_MODEL_NAME,
             version=registered_model_version.version,
             stage="Production",
-            archive_existing_versions=True, # Optional: move old Production models to Archive
+            archive_existing_versions=True,
         )
         print("✅ Model successfully promoted to Production!")
     except Exception as e:
@@ -132,4 +151,3 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
