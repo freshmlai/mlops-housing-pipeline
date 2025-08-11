@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Public/Documents/github/mlops-housing-pipeline/mlruns/407284034494708349/48f1a5e03d6c479ba264131fa9164642/artifacts
+end_time: 1754867583697
+entry_point_name: ''
+experiment_id: '407284034494708349'
+lifecycle_stage: active
+run_id: 48f1a5e03d6c479ba264131fa9164642
+run_name: Decision Tree
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754867569038
+status: 3
+tags: []
+user_id: HP-PC

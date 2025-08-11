@@ -1,6 +1,6 @@
-artifact_location: mlflow-artifacts:/0
-creation_time: 1754601055354
+artifact_location: file:///C:/Users/Public/Documents/github/mlops-housing-pipeline/mlruns/0
+creation_time: 1754867548542
 experiment_id: '0'
-last_update_time: 1754601055354
+last_update_time: 1754867548542
 lifecycle_stage: active
 name: Default

@@ -5,63 +5,131 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_squared_error
 import mlflow
 import mlflow.sklearn
-import json
-from pathlib import Path
+from mlflow.models.signature import infer_signature
+from mlflow.tracking import MlflowClient
+import time
 
-# ------------------------
-# Load dataset
-# ------------------------
-data = pd.read_csv("../data/housing.csv")
+# --- Configuration ---
+# Set paths and names to avoid hardcoding them multiple times
+DATA_PATH = "data/housing.csv"
+EXPERIMENT_NAME = "california-housing"
+REGISTERED_MODEL_NAME = "CaliforniaHousingModel"
 
-# ------------------------
-# Preprocessing (target is MedHouseVal)
-# ------------------------
-X = data.drop(columns=["MedHouseVal"])
-y = data["MedHouseVal"]
 
-# Save feature names for inference
-feature_names_path = Path(__file__).parent / "feature_names.json"
-with open(feature_names_path, "w") as f:
-    json.dump(list(X.columns), f)
+def main():
+    """
+    Main function to run the training pipeline.
+    - Loads data
+    - Trains multiple models
+    - Finds the best model based on MSE
+    - Registers the best model and promotes it to Production
+    """
+    mlflow.set_experiment(EXPERIMENT_NAME)
+    client = MlflowClient()
 
-# ------------------------
-# Split into training/testing
-# ------------------------
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+    # --- 1. Load and Prepare Data ---
+    print("Loading and preparing data...")
+    data = pd.read_csv(DATA_PATH)
+    X = data.drop(columns=["MedHouseVal"])
+    y = data["MedHouseVal"]
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+    feature_names = list(X.columns)
+    print("✅ Data ready.")
 
-# ------------------------
-# MLflow setup
-# ------------------------
-mlflow.set_experiment("california-housing")
+    # --- 2. Train and Evaluate Models ---
+    # Define models in a dictionary to easily iterate through them
+    models_to_train = {
+        "Linear Regression": LinearRegression(),
+        "Decision Tree": DecisionTreeRegressor(random_state=42),
+    }
 
-# ------------------------
-# 1. Linear Regression
-# ------------------------
-with mlflow.start_run(run_name="Linear Regression"):
-    lr_model = LinearRegression()
-    lr_model.fit(X_train, y_train)
-    y_pred = lr_model.predict(X_test)
-    mse = mean_squared_error(y_test, y_pred)
+    best_mse = float("inf")
+    best_run_id = None
 
-    mlflow.log_param("model", "Linear Regression")
-    mlflow.log_metric("mse", mse)
-    mlflow.sklearn.log_model(lr_model, "model")
+    print("\nStarting model training loop...")
+    for model_name, model in models_to_train.items():
+        with mlflow.start_run(run_name=model_name) as run:
+            run_id = run.info.run_id
+            print(f"--- Training {model_name} (Run ID: {run_id}) ---")
 
-    print(f"Linear Regression MSE: {mse}")
+            # Fit model and make predictions
+            model.fit(X_train, y_train)
+            preds = model.predict(X_test)
+            mse = mean_squared_error(y_test, preds)
 
-# ------------------------
-# 2. Decision Tree
-# ------------------------
-with mlflow.start_run(run_name="Decision Tree"):
-    dt_model = DecisionTreeRegressor(random_state=42)
-    dt_model.fit(X_train, y_train)
-    y_pred = dt_model.predict(X_test)
-    mse = mean_squared_error(y_test, y_pred)
+            # Log parameters, metrics, and artifacts
+            mlflow.log_param("model_name", model_name)
+            mlflow.log_param("mse", f"{mse:.6f}")
+            
+            # Log feature list directly as a dictionary artifact
+            mlflow.log_dict({"features": feature_names}, "features.json")
 
-    mlflow.log_param("model", "Decision Tree")
-    mlflow.log_metric("mse", mse)
-    mlflow.sklearn.log_model(dt_model, "model")
+            # Infer signature and log the model
+            signature = infer_signature(X_train, model.predict(X_train))
+            mlflow.sklearn.log_model(
+                sk_model=model,
+                artifact_path="model",
+                signature=signature,
+                input_example=X_train.head(1),
+            )
 
-    print(f"Decision Tree MSE: {mse}")
+            print(f"✅ {model_name} MSE: {mse:.4f}")
+
+            # Check if this is the best model so far
+            if mse < best_mse:
+                best_mse = mse
+                best_run_id = run_id
+                print(f"⭐ New best model found: {model_name}")
+
+    print(f"\n🏆 Best model is from Run ID: {best_run_id} with MSE: {best_mse:.4f}")
+
+    # --- 3. Register and Promote the Best Model ---
+    if not best_run_id:
+        raise RuntimeError("Training failed, no best model was found.")
+
+    print(f"\nRegistering best model under the name: '{REGISTERED_MODEL_NAME}'...")
+    model_uri = f"runs:/{best_run_id}/model"
+    try:
+        registered_model_version = mlflow.register_model(
+            model_uri=model_uri, name=REGISTERED_MODEL_NAME
+        )
+        print(
+            f"✅ Model registered successfully. Version: {registered_model_version.version}"
+        )
+    except Exception as e:
+        print(f"🚨 Model registration failed: {e}")
+        return
+
+    # --- 4. Wait for Model to be 'READY' and Promote ---
+    print("Waiting for model version to become 'READY'...")
+    for _ in range(10):  # Wait up to 10 seconds
+        model_version_details = client.get_model_version(
+            name=REGISTERED_MODEL_NAME, version=registered_model_version.version
+        )
+        if model_version_details.status == "READY":
+            print("✅ Model is READY.")
+            break
+        time.sleep(1)
+
+    if model_version_details.status != "READY":
+        print("🚨 Model version did not become ready in time. Aborting promotion.")
+        return
+
+    print(f"Promoting model version {registered_model_version.version} to 'Production' stage...")
+    try:
+        client.transition_model_version_stage(
+            name=REGISTERED_MODEL_NAME,
+            version=registered_model_version.version,
+            stage="Production",
+            archive_existing_versions=True, # Optional: move old Production models to Archive
+        )
+        print("✅ Model successfully promoted to Production!")
+    except Exception as e:
+        print(f"🚨 Model promotion failed: {e}")
+
+
+if __name__ == "__main__":
+    main()
+ 

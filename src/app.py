@@ -4,39 +4,22 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 from fastapi.responses import Response
 from pydantic import BaseModel
-import joblib
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from typing import Dict
 
+import mlflow
+from mlflow.exceptions import MlflowException
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # ========================
 # Config & Paths
 # ========================
 
-MODEL_PATH = "model.pkl"
-FEATURES_PATH = "features.pkl"
 DB_PATH = "logs.db"
 DATA_DIR = "data"
+EXPERIMENT_NAME = "california-housing"
+REGISTERED_MODEL_NAME = "CaliforniaHousingModel"
 
 os.makedirs(DATA_DIR, exist_ok=True)
-
-
-# ========================
-# Prometheus Metrics
-# ========================
-
-PREDICTION_COUNTER = Counter(
-    'prediction_requests_total',
-    'Total prediction requests',
-)
-RETRAIN_COUNTER = Counter(
-    'model_retrain_total',
-    'Total model retraining events',
-)
-
 
 # ========================
 # SQLite Logging Setup
@@ -55,7 +38,6 @@ def init_db():
         )
         conn.commit()
 
-
 def log_event(event_type: str, details: str):
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
@@ -65,59 +47,44 @@ def log_event(event_type: str, details: str):
         )
         conn.commit()
 
-
 init_db()
 
-
 # ========================
-# Load Model & Features
+# Load model and features from MLflow Production stage
 # ========================
 
-def load_model():
-    if os.path.exists(MODEL_PATH) and os.path.exists(FEATURES_PATH):
-        model = joblib.load(MODEL_PATH)
-        features = joblib.load(FEATURES_PATH)
+def load_production_model_and_features():
+    try:
+        # Load production model URI
+        model_uri = f"models:/{REGISTERED_MODEL_NAME}/Production"
+        model = mlflow.sklearn.load_model(model_uri)
+
+        # Features are stored as artifact "feature_names.json" in the same run
+        client = mlflow.tracking.MlflowClient()
+        # Get latest production version info
+        versions = client.get_latest_versions(REGISTERED_MODEL_NAME, stages=["Production"])
+        if not versions:
+            raise MlflowException(f"No production model version found for {REGISTERED_MODEL_NAME}")
+        prod_version = versions[0]
+        run_id = prod_version.run_id
+
+        # Download feature_names.json artifact
+        tmp_dir = os.path.join(DATA_DIR, "tmp_features")
+        os.makedirs(tmp_dir, exist_ok=True)
+        client.download_artifacts(run_id, "features.json", tmp_dir)
+        features_path = os.path.join(os.path.dirname(__file__), "feature_names.json")
+        features = pd.read_json(features_path)["features"].tolist() if os.path.exists(features_path) else None
+        if features is None:
+            raise Exception("Feature names artifact not found or empty")
+
         return model, features
-    return None, None
 
+    except Exception as e:
+        print(f"Error loading production model and features: {e}")
+        return None, None
 
-model, features = load_model()
-
-
-# ========================
-# Train Model Function
-# ========================
-
-def train_model_from_csv(csv_path: str) -> float:
-    global model, features
-    df = pd.read_csv(csv_path)
-
-    if 'MedHouseValue' not in df.columns:
-        raise ValueError("CSV must contain 'MedHouseValue' column")
-
-    X = df.drop('MedHouseValue', axis=1)
-    y = df['MedHouseValue']
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=0.2,
-        random_state=42,
-    )
-    new_model = LinearRegression()
-    new_model.fit(X_train, y_train)
-
-    mse = mean_squared_error(y_test, new_model.predict(X_test))
-
-    # Save model & features
-    joblib.dump(new_model, MODEL_PATH)
-    joblib.dump(list(X.columns), FEATURES_PATH)
-
-    # Reload into memory
-    model, features = load_model()
-
-    return mse
-
+# Load once at startup
+model, features = load_production_model_and_features()
 
 # ========================
 # FastAPI app
@@ -125,6 +92,8 @@ def train_model_from_csv(csv_path: str) -> float:
 
 app = FastAPI(title="California Housing Model API")
 
+# Prometheus instrumentation
+Instrumentator().instrument(app).expose(app)
 
 # ========================
 # Input Schema
@@ -140,39 +109,72 @@ class HousingInput(BaseModel):
     Latitude: float
     Longitude: float
 
-
 # ========================
 # Prediction Endpoint
 # ========================
 
 @app.post("/predict")
 async def predict(input_data: HousingInput) -> Dict[str, float]:
+    global model, features
+    # Reload model and features each time, or cache and reload periodically
     if model is None or features is None:
-        raise HTTPException(status_code=400, detail="Model not trained yet")
+        model, features = load_production_model_and_features()
+        if model is None or features is None:
+            raise HTTPException(status_code=400, detail="Production model not available")
 
     try:
         input_dict = input_data.dict()
+        # Ensure features order
         input_df = pd.DataFrame([input_dict], columns=features)
 
         prediction = float(model.predict(input_df)[0])
-        PREDICTION_COUNTER.inc()
         log_event(
             "prediction",
             f"Input: {input_dict}, Prediction: {prediction}",
         )
-
         return {"prediction": prediction}
 
     except Exception as e:
-        # FIX: Broke the following line into multiple lines to fix E501
-        raise HTTPException(
-            status_code=500, detail=f"Prediction failed: {str(e)}"
-        )
-
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 # ========================
-# Upload CSV & Auto Retrain
+# Upload CSV & Auto Retrain (reuse your existing train_model_from_csv logic)
 # ========================
+
+def train_model_from_csv(csv_path: str) -> float:
+    import joblib
+    from sklearn.linear_model import LinearRegression
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import mean_squared_error
+
+    global model, features
+    df = pd.read_csv(csv_path)
+
+    if 'MedHouseVal' not in df.columns:
+        raise ValueError("CSV must contain 'MedHouseVal' column")
+
+    X = df.drop('MedHouseVal', axis=1)
+    y = df['MedHouseVal']
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+    )
+    new_model = LinearRegression()
+    new_model.fit(X_train, y_train)
+
+    mse = mean_squared_error(y_test, new_model.predict(X_test))
+
+    # Save model & features locally for fallback if needed
+    joblib.dump(new_model, "../model.pkl")
+    joblib.dump(list(X.columns), "../features.pkl")
+
+    # Update in-memory model and features
+    model, features = new_model, list(X.columns)
+
+    return mse
 
 @app.post("/upload")
 async def upload_csv(file: UploadFile = File(...)):
@@ -186,14 +188,10 @@ async def upload_csv(file: UploadFile = File(...)):
             buffer.write(await file.read())
 
         mse = train_model_from_csv(save_path)
-        RETRAIN_COUNTER.inc()
         log_event(
             "retrain",
             (
-                "Triggered by file upload: "
-                f"{filename}, "
-                "MSE: "
-                f"{mse}"
+                f"Triggered by file upload: {filename}, MSE: {mse}"
             ),
         )
 
@@ -204,11 +202,6 @@ async def upload_csv(file: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-
-# ========================
-# Manual Retrain Endpoint
-# ========================
 
 @app.post("/retrain")
 async def retrain(request: Request):
@@ -225,7 +218,6 @@ async def retrain(request: Request):
 
     try:
         mse = train_model_from_csv(csv_path)
-        RETRAIN_COUNTER.inc()
         log_event(
             "retrain",
             f"Manual retrain from {csv_path}, MSE: {mse}",
@@ -238,13 +230,3 @@ async def retrain(request: Request):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-
-# ========================
-# Metrics Endpoint
-# ========================
-
-@app.get("/metrics")
-def metrics():
-    data = generate_latest()
-    return Response(content=data, media_type=CONTENT_TYPE_LATEST)
